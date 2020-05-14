@@ -26,13 +26,18 @@ def same_category_entries(entry):
 
 
 def get_entry_model():
-    return apps.get_model(*app_settings.ELEPHANTBLOG_DEFAULT_ENTRY_MODEL.split('.'), require_ready=False)
+    return apps.get_model(*_get_entry_model_setting().split('.'), require_ready=False)
 
 
 def get_related_query_kwargs(**kwargs):
     res = dict()
+    model_setting = _get_entry_model_setting()
     for old_kwarg, value in kwargs.items():
         # convert blogentries__isnull to app_name_model_blogentries__isnull
-        kwarg = "_".join(app_settings.ELEPHANTBLOG_DEFAULT_ENTRY_MODEL.split('.')).lower() + "_" + old_kwarg
+        kwarg = "_".join(_get_entry_model_setting().split('.')).lower() + "_" + old_kwarg
         res[kwarg] = value
     return res
+
+
+def _get_entry_model_setting():
+    return getattr(settings, "ELEPHANTBLOG_DEFAULT_ENTRY_MODEL", app_settings.ELEPHANTBLOG_DEFAULT_ENTRY_MODEL)
