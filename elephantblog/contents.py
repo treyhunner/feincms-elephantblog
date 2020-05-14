@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _, get_language
 
 from elephantblog.models import Category
-from elephantblog.utils import entry_list_lookup_related, get_entry_model
+from elephantblog.utils import entry_list_lookup_related, get_entry_model, get_related_query_kwargs
 
 try:
     # Load paginator with additional goodies form towel if possible
@@ -91,7 +91,7 @@ class BlogCategoryListContent(models.Model):
         if self.show_empty_categories:
             categories = Category.objects.all()
         else:
-            categories = Category.objects.exclude(blogentries__isnull=True)
+            categories = Category.objects.exclude(**get_related_query_kwargs(blogentries__isnull=True))
 
         return (
             "content/elephantblog/category_list.html",

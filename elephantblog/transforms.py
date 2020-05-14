@@ -1,7 +1,7 @@
 # coding: utf-8
 from __future__ import absolute_import, unicode_literals
 from elephantblog.models import Category
-from elephantblog.utils import get_entry_model
+from elephantblog.utils import get_entry_model, get_related_query_kwargs
 
 try:
     from feincms.contents import RichTextContent
@@ -53,7 +53,7 @@ class RichTextMediaFileAndCategoriesLookup(BaseLookup):
                 entry_dict[content.parent_id].first_image = content
 
         m2mfield = Entry._meta.get_field("categories")
-        categories = Category.objects.filter(blogentries__in=entry_dict.keys(),).extra(
+        categories = Category.objects.filter(**get_related_query_kwargs(blogentries__in=entry_dict.keys())).extra(
             select={
                 "entry_id": "%s.%s"
                 % (m2mfield.m2m_db_table(), m2mfield.m2m_column_name()),

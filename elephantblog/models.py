@@ -97,7 +97,7 @@ class AbstractEntry(Base, ContentModelMixin):
     author = models.ForeignKey(
         getattr(settings, "AUTH_USER_MODEL", "auth.User"),
         on_delete=models.CASCADE,
-        related_name="blogentries",
+        related_name="%(app_label)s_%(class)s_blogentries",
         limit_choices_to={"is_staff": True},
         verbose_name=_("author"),
     )
@@ -112,7 +112,7 @@ class AbstractEntry(Base, ContentModelMixin):
     last_changed = models.DateTimeField(_("last change"), auto_now=True, editable=False)
 
     categories = models.ManyToManyField(
-        Category, verbose_name=_("categories"), related_name="blogentries", blank=True
+        Category, verbose_name=_("categories"), related_name="%(app_label)s_%(class)s_blogentries", blank=True
     )
 
     objects = EntryManager()

@@ -7,7 +7,7 @@ from django.core.exceptions import FieldDoesNotExist
 from django.utils.translation import get_language
 
 from elephantblog.models import Category
-from elephantblog.utils import entry_list_lookup_related, get_entry_model
+from elephantblog.utils import entry_list_lookup_related, get_entry_model, get_related_query_kwargs
 
 
 register = template.Library()
@@ -31,7 +31,7 @@ def elephantblog_categories(show_empty_categories=False):
     """
     if show_empty_categories:
         return Category.objects.all()
-    return Category.objects.exclude(blogentries__isnull=True)
+    return Category.objects.exclude(**get_related_query_kwargs(blogentries__isnull=True))
 
 
 @assignment_tag
