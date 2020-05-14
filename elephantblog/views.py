@@ -11,8 +11,8 @@ from django.views.generic import dates
 
 from feincms.module.mixins import ContentObjectMixin
 
-from elephantblog.models import Category, Entry
-from elephantblog.utils import entry_list_lookup_related
+from elephantblog.models import Category
+from elephantblog.utils import entry_list_lookup_related, get_entry_model
 
 
 __all__ = (
@@ -40,7 +40,7 @@ class ElephantblogMixin(object):
     This requires at least FeinCMS v1.5.
     """
 
-    entry_class = Entry
+    entry_class = get_entry_model()
 
     def get_context_data(self, **kwargs):
         kwargs.update({"view": self})

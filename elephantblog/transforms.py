@@ -1,6 +1,7 @@
 # coding: utf-8
 from __future__ import absolute_import, unicode_literals
-from elephantblog.models import Category, Entry
+from elephantblog.models import Category
+from elephantblog.utils import get_entry_model
 
 try:
     from feincms.contents import RichTextContent
@@ -8,6 +9,9 @@ try:
 except ImportError:  # FeinCMS<2
     from feincms.content.richtext.models import RichTextContent
     from feincms.content.medialibrary.models import MediaFileContent
+
+
+Entry = get_entry_model()
 
 
 class BaseLookup(object):

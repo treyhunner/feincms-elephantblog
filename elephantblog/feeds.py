@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.syndication.views import Feed
 from django.utils.translation import get_language
 
-from elephantblog.models import Entry
+from elephantblog.utils import get_entry_model
 
 
 if not (hasattr(settings, "BLOG_TITLE") and hasattr(settings, "BLOG_DESCRIPTION")):
@@ -14,6 +14,8 @@ if not (hasattr(settings, "BLOG_TITLE") and hasattr(settings, "BLOG_DESCRIPTION"
         "BLOG_TITLE and/or BLOG_DESCRIPTION not defined in"
         " settings.py. Standard values used for the Feed"
     )
+
+Entry = get_entry_model()
 
 
 def tryrender(content):
