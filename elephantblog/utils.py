@@ -1,8 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 
+from django.apps import apps
 from django.conf import settings
 from django.utils.module_loading import import_string
 
+import elephantblog.default_settings as app_settings
 from .models import Entry
 
 
@@ -24,3 +26,7 @@ def same_category_entries(entry):
         .exclude(pk=entry.pk)
         .distinct()
     )
+
+
+def get_entry_model():
+    return apps.get_model(*app_settings.ELEPHANTBLOG_DEFAULT_ENTRY_MODEL.split('.'), require_ready=False)

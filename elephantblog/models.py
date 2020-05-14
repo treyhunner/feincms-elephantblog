@@ -87,7 +87,8 @@ EntryManager.add_to_active_filters(
 
 
 @six.python_2_unicode_compatible
-class Entry(Base, ContentModelMixin):
+class AbstractEntry(Base, ContentModelMixin):
+
     is_active = models.BooleanField(_("is active"), default=True, db_index=True)
     is_featured = models.BooleanField(_("is featured"), default=False, db_index=True)
 
@@ -121,19 +122,20 @@ class Entry(Base, ContentModelMixin):
         ordering = ["-published_on"]
         verbose_name = _("entry")
         verbose_name_plural = _("entries")
+        abstract = True
 
     def __str__(self):
         return self.title
 
     def __init__(self, *args, **kwargs):
-        super(Entry, self).__init__(*args, **kwargs)
+        super(AbstractEntry, self).__init__(*args, **kwargs)
         self._old_is_active = self.is_active
 
     def save(self, *args, **kwargs):
         if self.is_active and not self.published_on:
             self.published_on = timezone.now()
 
-        super(Entry, self).save(*args, **kwargs)
+        super(AbstractEntry, self).save(*args, **kwargs)
 
     save.alters_data = True
 
@@ -164,3 +166,8 @@ class Entry(Base, ContentModelMixin):
         from .modeladmins import EntryAdmin
 
         register_fn(cls, EntryAdmin)
+
+
+@six.python_2_unicode_compatible
+class Entry(AbstractEntry):
+    pass
