@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import get_language, gettext_lazy as _
 
-from elephantblog.models import Category, Entry
-from elephantblog.utils import entry_list_lookup_related
+from elephantblog.models import Category
+from elephantblog.utils import entry_list_lookup_related, get_entry_model, get_related_query_kwargs
 
 
 try:
@@ -10,6 +10,9 @@ try:
     from towel.paginator import EmptyPage, PageNotAnInteger, Paginator
 except ImportError:
     from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
+
+Entry = get_entry_model()
 
 
 class BlogEntryListContent(models.Model):
@@ -85,7 +88,7 @@ class BlogCategoryListContent(models.Model):
         if self.show_empty_categories:
             categories = Category.objects.all()
         else:
-            categories = Category.objects.exclude(blogentries__isnull=True)
+            categories = Category.objects.exclude(**get_related_query_kwargs(blogentries__isnull=True))
 
         return (
             "content/elephantblog/category_list.html",

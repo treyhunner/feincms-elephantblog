@@ -1,0 +1,1 @@
+ELEPHANTBLOG_DEFAULT_ENTRY_MODEL = "elephantblog.Entry"

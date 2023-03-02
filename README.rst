@@ -66,6 +66,11 @@ Read the source: https://github.com/feincms/feincms-elephantblog
     :alt: Wheel Status
 
 
+Settings
+========
+
+* ``ELEPHANTBLOG_DEFAULT_ENTRY_MODEL``: Defaults to ``elephantblog.Entry``.
+
 
 Changelog
 =========

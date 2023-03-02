@@ -75,7 +75,8 @@ EntryManager.add_to_active_filters(
 )
 
 
-class Entry(Base, ContentModelMixin):
+class AbstractEntry(Base, ContentModelMixin):
+
     is_active = models.BooleanField(_("is active"), default=True, db_index=True)
     is_featured = models.BooleanField(_("is featured"), default=False, db_index=True)
 
@@ -84,7 +85,7 @@ class Entry(Base, ContentModelMixin):
     author = models.ForeignKey(
         getattr(settings, "AUTH_USER_MODEL", "auth.User"),
         on_delete=models.CASCADE,
-        related_name="blogentries",
+        related_name="%(app_label)s_%(class)s_blogentries",
         limit_choices_to={"is_staff": True},
         verbose_name=_("author"),
     )
@@ -99,7 +100,10 @@ class Entry(Base, ContentModelMixin):
     last_changed = models.DateTimeField(_("last change"), auto_now=True, editable=False)
 
     categories = models.ManyToManyField(
-        Category, verbose_name=_("categories"), related_name="blogentries", blank=True
+        Category,
+        verbose_name=_("categories"),
+        related_name="%(app_label)s_%(class)s_blogentries",
+        blank=True,
     )
 
     objects = EntryManager()
@@ -109,6 +113,7 @@ class Entry(Base, ContentModelMixin):
         ordering = ["-published_on"]
         verbose_name = _("entry")
         verbose_name_plural = _("entries")
+        abstract = True
 
     def __str__(self):
         return self.title
@@ -152,3 +157,7 @@ class Entry(Base, ContentModelMixin):
         from .modeladmins import EntryAdmin
 
         register_fn(cls, EntryAdmin)
+
+
+class Entry(AbstractEntry):
+    pass

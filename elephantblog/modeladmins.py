@@ -4,12 +4,16 @@ from django.utils.translation import gettext_lazy as _
 from feincms.admin import item_editor
 from feincms.translations import admin_translationinline
 
-from elephantblog.models import CategoryTranslation, Entry
+from elephantblog.models import CategoryTranslation
+from elephantblog.utils import get_entry_model
 
 
 CategoryTranslationInline = admin_translationinline(
     CategoryTranslation, prepopulated_fields={"slug": ("title",)}
 )
+
+
+Entry = get_entry_model()
 
 
 class CategoryAdmin(admin.ModelAdmin):

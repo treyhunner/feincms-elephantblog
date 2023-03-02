@@ -1,7 +1,11 @@
 from feincms.content.richtext.models import RichTextContent
 from feincms.module.medialibrary.contents import MediaFileContent
 
-from elephantblog.models import Category, Entry
+from elephantblog.models import Category
+from elephantblog.utils import get_entry_model, get_related_query_kwargs
+
+
+Entry = get_entry_model()
 
 
 class BaseLookup:
@@ -43,7 +47,9 @@ class RichTextMediaFileAndCategoriesLookup(BaseLookup):
                 entry_dict[content.parent_id].first_image = content
 
         m2mfield = Entry._meta.get_field("categories")
-        categories = Category.objects.filter(blogentries__in=entry_dict.keys(),).extra(
+        categories = Category.objects.filter(
+            **get_related_query_kwargs(blogentries__in=entry_dict.keys())
+        ).extra(
             select={
                 "entry_id": "%s.%s"
                 % (m2mfield.m2m_db_table(), m2mfield.m2m_column_name()),
